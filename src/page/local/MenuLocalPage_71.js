@@ -1,18 +1,11 @@
 import { useState,useEffect } from "react";
 import MenuProducts_71 from "../../components/MenuProducts_71";
-const base_url=`https://sjpcedtwrnasasskzklq.supabase.co/rest/v1/menu_71?select=*`;
+const base_url=`/api/menu.json`;
 
 let url=`${base_url}`;
 
-const options = {
-  method: 'GET',
-  headers:{
-    apikey: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`,
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`
-  }
-};
 
-const MenuPage_71 = () => {
+const MenuLocalPage_71 = () => {
   const [products,setProducts] = useState([]);
 
   const changeFilter = (filter) => {
@@ -25,7 +18,7 @@ const MenuPage_71 = () => {
   }
 
   const getMenuData_71 = async (filter = 'all') => {
-    const response =await fetch(url,options);
+    const response =await fetch(url);
     const data = await response.json();
     console.log(`${filter} data`,data);
     setProducts(data);
@@ -40,7 +33,7 @@ const MenuPage_71 = () => {
       <div className="section-center">
         <section className="menu">
           <div className="title">
-            <h2> Menu from Supabase Menu Table</h2>
+            <h2> Menu from Local Menu Table</h2>
             <h3>207410571 鄭凱鴻</h3>
             <div className="underline"></div>
           </div>
@@ -77,4 +70,4 @@ const MenuPage_71 = () => {
   );
 }
 
-export default MenuPage_71;
+export default MenuLocalPage_71;

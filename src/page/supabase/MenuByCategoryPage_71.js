@@ -1,29 +1,50 @@
 import { useState,useEffect } from "react";
 import { useParams,useNavigate } from 'react-router-dom';
+import MenuProducts_71 from "../../components/MenuProducts_71";
+
+
+const base_url=`https://sjpcedtwrnasasskzklq.supabase.co/rest/v1/menu_71?select=*`;
+
+let url=`${base_url}`;
+
+const options = {
+  method: 'GET',
+  headers:{
+    apikey: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`
+  }
+};
 
 const MenuByCategoryPage_71 = () => {
   const [products,setProducts] = useState([]);
+  const [category,setCategory] = useState('all');
   const params = useParams();
   console.log('params category',params.category);
   
   const navigate= useNavigate();
 
+  const changeFilter = (category) => {
+    console.log('category',category)
+    setCategory(category)
+  }
+
   const getMenuDatallyCategory_71 = async() => {
-      const respone = await fetch(`https://sjpcedtwrnasasskzklq.supabase.co/rest/v1/menu_71?select=*&category=eq.${params.category}`,
-      {method: 'GET',
-        headers:{
-          apikey:`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`,
-          Authorization:`Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqcGNlZHR3cm5hc2Fzc2t6a2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzY0NTk1MjIsImV4cCI6MTk5MjAzNTUyMn0.FfCy_nmtttEGkXbPNSnlnBwvxxJvtdPBap0gJRs3SbA`
-        }
-    });
+    if(params.category === 'all'){
+      url = `${base_url}`;
+    }else{
+      url = `${base_url}&category=eq.${params.category};`
+    }
+      const respone = await fetch(url,options)
       const data = await respone.json();
       console.log('menu data', data);
       setProducts(data);
-  }
+    }
+      
+  
   
   useEffect(() =>{
        getMenuDatallyCategory_71();
-  },[]);
+  },[category]);
   return (
     <section>
       <div className="btn-container"></div>
@@ -35,39 +56,13 @@ const MenuByCategoryPage_71 = () => {
             <div className="underline"></div>
           </div>
           <div className="btn-container">
-            <button type="button" className="filter-btn" data-id="all">all</button>
-            <button type="button" className="filter-btn" data-id="breakfast" onClick={()=>{
-              navigate('/supa_menu_71/breakfast');
-            }}>
-              breakfast</button>
-            <button type="button" className="filter-btn" data-id="lunch" onClick={()=>{
-              navigate('/supa_menu_71/lunch');
-            }} >
-              lunch</button>
-            <button type="button" className="filter-btn" data-id="dessert">dessert</button>
-              <button type="button" className="filter-btn" data-id="shakes">
-              shakes
-            </button>
+            <button type="button" className="filter-btn" data-id="all" onClick={()=>{changeFilter('all'); return navigate(`/supa_menu/all`) }}>all</button>
+            <button type="button" className="filter-btn" data-id="breakfast" onClick={()=>{changeFilter('breakfast'); return navigate(`/supa_menu/breakfast`)}}>breakfast</button>
+            <button type="button" className="filter-btn" data-id="lunch" onClick={()=>{changeFilter('lunch'); return navigate(`/supa_menu/lunch`)}}>lunch</button>
+            <button type="button" className="filter-btn" data-id="dessert" onClick={()=>{changeFilter('dessert'); return navigate(`/supa_menu/dessert`) }}>dessert</button>
+            <button type="button" className="filter-btn" data-id="shakes" onClick={()=>{changeFilter('shakes'); return navigate(`/supa_menu/shakes`)}}>shakes</button>
           </div>
-          <div className="section-center">
-            { products.map((product) =>{
-              const {id,img,price,title,descrip} = product; 
-                return (
-                  <article className="menu-item" key={id}>
-                  <img src={img} alt="eggs" className="photo" />
-                  <div className="item-info">
-                   <header>
-                    <h4>{title}</h4>
-                    <h4 className="price">{price}</h4>
-                   </header>
-                  <p className="item-text">
-                  {descrip}
-                </p>
-              </div>
-            </article>
-                )
-            })}
-          </div>
+          <MenuProducts_71 products={products} />
         </section>
       </div>
     </section>
