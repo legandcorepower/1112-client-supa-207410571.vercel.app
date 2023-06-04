@@ -28,6 +28,8 @@ const MenuLocalPage_71 = () => {
        getMenuData_71();
   },[]);
   return (
+   
+
     <section>
       <div className="btn-container"></div>
       <div className="section-center">
